@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChromaForge // Ultimate 4K Wallpaper Creator</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Google Fonts for the UI & Canvas Text -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;700;900&family=Playfair+Display:ital,wght@0,700;1,400&family=Space+Grotesk:wght@400;700&family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="dark-theme">
+    <div class="app-container">
+        <!-- Top Toolbar -->
+        <header class="top-toolbar">
+            <div class="logo-area">
+                <i class="fa-solid fa-wand-magic-sparkles brand-icon"></i>
+                <span class="brand-name">ChromaForge<span class="version">v1.2</span></span>
+            </div>
+            
+            <div class="action-buttons">
+                <button id="btn-undo" class="tool-btn" title="Undo (Ctrl+Z)"><i class="fa-solid fa-rotate-left"></i></button>
+                <button id="btn-redo" class="tool-btn" title="Redo (Ctrl+Y)"><i class="fa-solid fa-rotate-right"></i></button>
+                <div class="divider"></div>
+                <button id="btn-zoom-out" class="tool-btn" title="Zoom Out"><i class="fa-solid fa-magnifying-glass-minus"></i></button>
+                <span id="zoom-level" class="toolbar-text">100%</span>
+                <button id="btn-zoom-in" class="tool-btn" title="Zoom In"><i class="fa-solid fa-magnifying-glass-plus"></i></button>
+                <button id="btn-reset-view" class="tool-btn-text" title="Fit to Screen">Fit</button>
+                <div class="divider"></div>
+                <button id="btn-randomize" class="action-btn secondary" title="Randomize properties"><i class="fa-solid fa-dice"></i> Randomize</button>
+            </div>
+
+            <div class="export-area">
+                <button id="btn-save-project" class="action-btn secondary" title="Save Project Locally"><i class="fa-solid fa-floppy-disk"></i> Save Project</button>
+                <button id="btn-export-modal" class="action-btn primary" title="Export Wallpaper"><i class="fa-solid fa-download"></i> Export Canvas</button>
+            </div>
+        </header>
+
+        <!-- Main Workspace -->
+        <div class="main-workspace">
+            <!-- Left Sidebar (Tool tabs & Library) -->
+            <aside class="sidebar-left">
+                <nav class="sidebar-nav">
+                    <button class="nav-tab active" data-tab="tab-templates" title="Templates"><i class="fa-solid fa-cubes"></i><span>Presets</span></button>
+                    <button class="nav-tab" data-tab="tab-background" title="Background"><i class="fa-solid fa-palette"></i><span>Canvas</span></button>
+                    <button class="nav-tab" data-tab="tab-layers" title="Layers"><i class="fa-solid fa-layer-group"></i><span>Layers</span></button>
+                    <button class="nav-tab" data-tab="tab-add" title="Add Layer"><i class="fa-solid fa-circle-plus"></i><span>Add</span></button>
+                </nav>
+                
+                <div class="sidebar-content">
+                    <!-- Templates Section -->
+                    <div id="tab-templates" class="tab-pane active">
+                        <h3>Design Templates</h3>
+                        <p class="tab-subtitle">Choose a foundation theme to customize.</p>
+                        <div class="grid-presets">
+                            <div class="preset-card" data-preset="amoled">
+                                <div class="preset-preview amoled-grad"></div>
+                                <span>AMOLED Night</span>
+                            </div>
+                            <div class="preset-card" data-preset="cyberpunk">
+                                <div class="preset-preview cyberpunk-grad"></div>
+                                <span>Cyberpunk Grid</span>
+                            </div>
+                            <div class="preset-card" data-preset="aurora">
+                                <div class="preset-preview aurora-grad"></div>
+                                <span>Nordic Aurora</span>
+                            </div>
+                            <div class="preset-card" data-preset="minimal-mountain">
+                                <div class="preset-preview mountain-grad"></div>
+                                <span>Solar Dusk</span>
+                            </div>
+                            <div class="preset-card" data-preset="glass">
+                                <div class="preset-preview glass-grad"></div>
+                                <span>Frosted Glass</span>
+                            </div>
+                            <div class="preset-card" data-preset="space">
+                                <div class="preset-preview space-grad"></div>
+                                <span>Deep Nebula</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Background Options -->
+                    <div id="tab-background" class="tab-pane">
+                        <h3>Background Style</h3>
+                        <p class="tab-subtitle">Configure wallpaper canvas background core style.</p>
+                        
+                        <div class="control-group">
+                            <label>Fill Type</label>
+                            <select id="bg-fill-type" class="form-control">
+                                <option value="solid">Solid Color</option>
+                                <option value="linear">Linear Gradient</option>
+                                <option value="radial">Radial Gradient</option>
+                                <option value="pattern">Procedural Noise Grid</option>
+                            </select>
+                        </div>
+
+                        <!-- Solid Color Controls -->
+                        <div id="bg-solid-controls" class="control-subgroup">
+                            <div class="control-group">
+                                <label>Background Color</label>
+                                <div class="color-picker-wrapper">
+                                    <input type="color" id="bg-solid-color" value="#0a0a12">
+                                    <input type="text" id="bg-solid-hex" class="form-control hex-input" value="#0a0a12">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Gradient Controls -->
+                        <div id="bg-gradient-controls" class="control-subgroup hidden">
+                            <div class="control-group">
+                                <label>Color Stop 1</label>
+                                <div class="color-picker-wrapper">
+                                    <input type="color" id="bg-grad-1" value="#120c1f">
+                                    <input type="text" id="bg-grad-1-hex" class="form-control hex-input" value="#120c1f">
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label>Color Stop 2</label>
+                                <div class="color-picker-wrapper">
+                                    <input type="color" id="bg-grad-2" value="#051c24">
+                                    <input type="text" id="bg-grad-2-hex" class="form-control hex-input" value="#051c24">
+                                </div>
+                            </div>
+                            <div class="control-group scale-group" id="grad-angle-control">
+                                <label>Gradient Angle</label>
+                                <input type="range" id="bg-grad-angle" min="0" max="360" value="135">
+                                <span class="range-val" id="bg-grad-angle-val">135°</span>
+                            </div>
+                        </div>
+
+                        <!-- Noise Overlays -->
+                        <div class="control-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="bg-enable-noise" checked>
+                                <span>Add Digital Noise/Grain</span>
+                            </label>
+                        </div>
+                        <div class="control-group scale-group">
+                            <label>Noise Intensity</label>
+                            <input type="range" id="bg-noise-opacity" min="0" max="100" value="15">
+                            <span class="range-val" id="bg-noise-opacity-val">15%</span>
+                        </div>
+                    </div>
+
+                    <!-- Layers List Panel -->
+                    <div id="tab-layers" class="tab-pane">
+                        <div class="sidebar-header-action">
+                            <h3>Layers Management</h3>
+                            <button id="btn-clear-layers" class="icon-action-btn" title="Clear all layers"><i class="fa-solid fa-trash-can"></i></button>
+                        </div>
+                        <p class="tab-subtitle">Arrange, lock, and reorder elements.</p>
+                        <div id="layers-stack" class="layers-stack-list">
+                            <!-- Populated Dynamically via JS -->
+                            <div class="empty-layers-msg">No design layers active. Use the "+" Add menu to overlay shapes or text!</div>
+                        </div>
+                    </div>
+
+                    <!-- Add Tool/Asset -->
+                    <div id="tab-add" class="tab-pane">
+                        <h3>Add Layer Element</h3>
+                        <p class="tab-subtitle">Overlay shapes, vector shapes, labels, or images.</p>
+                        
+                        <div class="add-buttons-container">
+                            <button id="add-text-layer" class="add-btn"><i class="fa-solid fa-font"></i> Dynamic Text Layer</button>
+                            <button id="add-rect-layer" class="add-btn" data-shape="rect"><i class="fa-solid fa-vector-square"></i> Vector Rectangle</button>
+                            <button id="add-circle-layer" class="add-btn" data-shape="circle"><i class="fa-solid fa-circle"></i> Vector Circle</button>
+                            <button id="add-star-layer" class="add-btn" data-shape="star"><i class="fa-solid fa-star"></i> Cosmic Star Shape</button>
+                            
+                            <div class="upload-zone" id="image-upload-zone">
+                                <input type="file" id="file-input" accept="image/*" class="hidden-input">
+                                <div class="upload-inner">
+                                    <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
+                                    <span>Import Custom Image</span>
+                                    <span class="upload-sub">Drag & drop or Click</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Center Canvas Viewport -->
+            <main class="canvas-viewport" id="viewport">
+                <!-- Grid background for canvas workspace transparency -->
+                <div class="workspace-grid-bg"></div>
+                
+                <div class="canvas-wrapper" id="canvas-wrapper">
+                    <!-- Target Interactive Canvas -->
+                    <canvas id="wallpaper-canvas"></canvas>
+                    
+                    <!-- SVG Overlay for accurate guides/safe zones -->
+                    <svg class="guides-overlay" id="guides-overlay" width="100%" height="100%">
+                        <!-- Guides rendered dynamically -->
+                    </svg>
+                </div>
+
+                <!-- Custom Overlay Quick Controls for Canvas (Scale, Ratio, Device previews) -->
+                <div class="canvas-context-bar">
+                    <div class="preset-selector-group">
+                        <label for="resolution-preset"><i class="fa-solid fa-display"></i> Canvas Preset:</label>
+                        <select id="resolution-preset" class="form-control-compact">
+                            <option value="auto">Auto (Detect My Screen)</option>
+                            <option value="phone">Smartphone (1080 × 2400)</option>
+                            <option value="tablet">Tablet / iPad (2048 × 2732)</option>
+                            <option value="1080p">FHD Standard (1920 × 1080)</option>
+                            <option value="2k">2K QHD (2560 × 1440)</option>
+                            <option value="4k" selected>4K Ultra HD (3840 × 2160)</option>
+                            <option value="8k">8K Ultra HD (7680 × 4320)</option>
+                            <option value="custom">Custom Resolution...</option>
+                        </select>
+                    </div>
+
+                    <!-- Custom inputs, active when "custom" selected -->
+                    <div id="custom-res-inputs" class="custom-res-inputs hidden">
+                        <input type="number" id="custom-width" class="form-control-compact" value="3840" placeholder="Width">
+                        <span>×</span>
+                        <input type="number" id="custom-height" class="form-control-compact" value="2160" placeholder="Height">
+                        <button id="apply-custom-res" class="apply-btn">Apply</button>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <!-- Device frame guides previews -->
+                    <div class="guide-toggle-buttons">
+                        <button id="toggle-grid" class="overlay-toggle" title="Show Layout Grid"><i class="fa-solid fa-grid-3x3"></i></button>
+                        <button id="toggle-safezone" class="overlay-toggle" title="Show Safe Zones (Mobile / Desktop Desktop App Icons)"><i class="fa-solid fa-shield-halved"></i></button>
+                    </div>
+                </div>
+            </main>
+
+            <!-- Right Sidebar (Selected Element Properties & Context Parameters) -->
+            <aside class="sidebar-right" id="properties-sidebar">
+                <div class="no-selection-state active" id="no-selection-msg">
+                    <i class="fa-solid fa-sliders slider-placeholder-icon"></i>
+                    <h4>Canvas Controls</h4>
+                    <p>Select a dynamic layer on canvas or in the layer pane to fine-tune spatial details, gradients, effects, and text parameters.</p>
+                </div>
+
+                <div class="properties-content hidden" id="properties-panel">
+                    <div class="property-header">
+                        <h3 id="prop-layer-title">Layer Properties</h3>
+                        <div class="quick-layer-actions">
+                            <button id="prop-btn-lock" class="action-icon-btn" title="Lock/Unlock Layer"><i class="fa-solid fa-lock-open"></i></button>
+                            <button id="prop-btn-hide" class="action-icon-btn" title="Toggle Visibility"><i class="fa-solid fa-eye"></i></button>
+                            <button id="prop-btn-delete" class="action-icon-btn danger" title="Delete Layer"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
+
+                    <!-- Shared Position & Dimension Properties -->
+                    <div class="property-section">
+                        <h4>Transform</h4>
+                        <div class="grid-2x2">
+                            <div class="control-group">
+                                <label>X Position</label>
+                                <input type="number" id="prop-x" class="form-control">
+                            </div>
+                            <div class="control-group">
+                                <label>Y Position</label>
+                                <input type="number" id="prop-y" class="form-control">
+                            </div>
+                            <div class="control-group">
+                                <label>Width</label>
+                                <input type="number" id="prop-w" class="form-control">
+                            </div>
+                            <div class="control-group">
+                                <label>Height</label>
+                                <input type="number" id="prop-h" class="form-control">
+                            </div>
+                        </div>
+                        <div class="control-group scale-group">
+                            <label>Rotation</label>
+                            <input type="range" id="prop-rotation" min="0" max="360" value="0">
+                            <span class="range-val" id="prop-rot-val">0°</span>
+                        </div>
+                        <div class="control-group scale-group">
+                            <label>Opacity</label>
+                            <input type="range" id="prop-opacity" min="0" max="100" value="100">
+                            <span class="range-val" id="prop-opacity-val">100%</span>
+                        </div>
+                    </div>
+
+                    <!-- Text Editing Specific Properties -->
+                    <div class="property-section hidden" id="section-text-properties">
+                        <h4>Text Attributes</h4>
+                        <div class="control-group">
+                            <label>Text Content</label>
+                            <textarea id="prop-text-content" class="form-control" rows="2"></textarea>
+                        </div>
+                        <div class="control-group">
+                            <label>Font Family</label>
+                            <select id="prop-font-family" class="form-control">
+                                <option value="Inter">Inter</option>
+                                <option value="Montserrat">Montserrat</option>
+                                <option value="Space Grotesk">Space Grotesk</option>
+                                <option value="Playfair Display">Playfair Display</option>
+                                <option value="Fira Code">Fira Code</option>
+                            </select>
+                        </div>
+                        <div class="control-group">
+                            <label>Font Size</label>
+                            <input type="number" id="prop-font-size" class="form-control" value="80">
+                        </div>
+                        <div class="control-group">
+                            <label>Letter Spacing (px)</label>
+                            <input type="number" id="prop-letter-spacing" class="form-control" value="0">
+                        </div>
+                        <div class="control-group">
+                            <label>Text Align</label>
+                            <div class="segmented-control">
+                                <button class="segment-btn active" data-align="left"><i class="fa-solid fa-align-left"></i></button>
+                                <button class="segment-btn" data-align="center"><i class="fa-solid fa-align-center"></i></button>
+                                <button class="segment-btn" data-align="right"><i class="fa-solid fa-align-right"></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Color / Fill Custom Properties -->
+                    <div class="property-section" id="section-color-properties">
+                        <h4>Visual Fill</h4
